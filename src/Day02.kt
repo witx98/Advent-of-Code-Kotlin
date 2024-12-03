@@ -22,7 +22,7 @@ private fun firstPart(lines: List<String>): Int {
     }.count { it }
 }
 
-fun tryEveryCombination(report: List<Int>): Boolean {
+private fun tryEveryCombination(report: List<Int>): Boolean {
     if (isSafe(report)) {
         return true
     }
