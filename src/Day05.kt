@@ -1,28 +1,26 @@
 fun main() {
-    val inputLines = readInput("day-05-input")
-    val (rules, pages) = getRulesAndPages(inputLines)
-    val (correctPages, incorrectPages) = groupPages(rules, pages)
+    val (rulesLines, pagesLines) = readInput("day-05-input").filter { it.isNotBlank() }.partition { '|' in it }
+    val rules = getRules(rulesLines)
+    val (correctPages, incorrectPages) = groupPages(getPages(pagesLines), rules)
     firstPart(correctPages).println()
     secondPart(incorrectPages, rules).println()
 }
 
-fun groupPages(rules: Map<Int, List<Int>>, pages: List<List<Int>>): Pair<List<List<Int>>, List<List<Int>>> {
+fun groupPages(pages: List<List<Int>>, rules: Map<Int, List<Int>>): Pair<List<List<Int>>, List<List<Int>>> {
     return pages.partition { page ->
         isCorrectPage(page, rules).first
     }
 }
 
-private fun getRulesAndPages(inputLines: List<String>): Pair<Map<Int, List<Int>>, List<List<Int>>> {
-    val (rulesLines, pagesLines) = inputLines.filter { it.isNotBlank() }.partition { '|' in it }
+fun getPages(pagesLines: List<String>): List<List<Int>> {
+    return pagesLines.map { it.trim().split(",").map(String::toInt) }
+}
 
-    val rules = rulesLines.map {
+fun getRules(rulesLines: List<String>): Map<Int, List<Int>> {
+    return rulesLines.map {
         val (left, right) = it.trim().split("|").map(String::toInt)
         left to right
     }.groupBy({ it.first }, { it.second })
-
-    val pages = pagesLines.map { it.trim().split(",").map(String::toInt) }
-
-    return rules to pages
 }
 
 private fun firstPart(pages: List<List<Int>>): Int {
