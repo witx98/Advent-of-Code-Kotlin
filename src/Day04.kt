@@ -2,87 +2,66 @@ fun main() {
     val lines = readInput("day-04-input")
     val grid = Grid(lines)
 
-    grid.countWordOccurrence("XMAS").println()
-    grid.xmasCounter().println()
+    grid.partOne().println()
+    grid.partTwo().println()
 }
 
-
-enum class Direction(val dy: Int, val dx: Int) {
-    UP(-1, 0),
-    UP_RIGHT(-1, 1),
-    RIGHT(0, 1),
-    DOWN_RIGHT(1, 1),
-    DOWN(1, 0),
-    DOWN_LEFT(1, -1),
-    LEFT(0, -1),
-    UP_LEFT(-1, -1);
-}
-
-class Grid(lines: List<String>) {
-    private val grid: List<List<Char>> = lines.map { line ->
-        line.toCharArray().toList()
-    }
+private class Grid(lines: List<String>) {
+    private val grid: List<List<Char>> = lines.map { line -> line.toCharArray().toList() }
     private val columns = grid.first().size
     private val rows = grid.size
-
-    private fun isWithinBounds(y: Int, x: Int): Boolean = y in 0 until rows && x in 0 until columns
-
-    fun countWordOccurrence(word: String): Int {
-        val firstLetter = word[0]
-        var counter = 0
+    private val indices = sequence {
         for (y in 0 until rows) {
             for (x in 0 until columns) {
-                if (grid[y][x] == firstLetter) {
-                    counter += checkAllDirections(y, x, word)
-                }
+                yield(Pair(x, y))
             }
         }
-        return counter
     }
 
-    fun xmasCounter(): Int {
-        var counter = 0
-        for (y in 1 until rows - 1) {
-            for (x in 1 until columns - 1) {
-                if (grid[y][x] == 'A') {
-                    counter += checkDiagonals(y, x)
-                }
+    private fun isWithinBounds(y: Int, x: Int, margin: UInt = 0u): Boolean =
+        y in (0 + margin.toInt()) until (rows - margin.toInt())
+                && x in (0 + margin.toInt()) until (columns - margin.toInt())
+
+    fun partOne(): Int {
+        return this.indices.sumOf { (x, y) -> checkAllDirections(x, y) }
+    }
+
+    private fun checkAllDirections(x: Int, y: Int): Int {
+        return Direction.entries.count { direction -> checkDirection(x, y, direction) }
+    }
+
+    private fun checkDirection(x: Int, y: Int, direction: Direction): Boolean {
+        var currentX = x
+        var currentY = y
+
+        for (letter in "XMAS") {
+            if (!isWithinBounds(currentY, currentX) || grid[currentY][currentX] != letter) {
+                return false
             }
+            currentX += direction.dx
+            currentY += direction.dy
         }
-        return counter
+        return true
     }
 
 
-    private fun checkDiagonals(y: Int, x: Int): Int {
-        val firstWord = "" + grid[y - 1][x - 1] + grid[y][x] + grid[y + 1][x + 1]
-        val secondWord = "" + grid[y - 1][x + 1] + grid[y][x] + grid[y + 1][x - 1]
-        return if (isMAS(firstWord) && isMAS(secondWord)) 1 else 0
+    fun partTwo(): Int {
+        return indices.filter { (x, y) -> isWithinBounds(y, x, 1u) }
+            .filter { (x, y) -> grid[y][x] == 'A' }
+            .count { (x, y) -> checkDiagonals(x, y) }
+    }
+
+    private fun checkDiagonals(x: Int, y: Int): Boolean {
+        val firstWord = "" + getNeighbour(x, y, Direction.UP_LEFT) + grid[y][x] + getNeighbour(x, y, Direction.DOWN_RIGHT)
+        val secondWord = "" + getNeighbour(x, y, Direction.DOWN_LEFT) + grid[y][x] + getNeighbour(x, y, Direction.UP_RIGHT)
+        return isMAS(firstWord) && isMAS(secondWord)
+    }
+
+    private fun getNeighbour(x: Int, y: Int, direction: Direction): Char {
+        return grid[y + direction.dy][x + direction.dx]
     }
 
     private fun isMAS(word: String): Boolean {
         return word == "MAS" || word.reversed() == "MAS"
-    }
-
-    private fun checkAllDirections(y: Int, x: Int, word: String): Int {
-        val length = word.length
-        var counter = 0
-        for (direction in Direction.entries) {
-            var currentY = y
-            var currentX = x
-            var match = true
-
-            for (i in 1 until length) {
-                currentY += direction.dy
-                currentX += direction.dx
-                if (!isWithinBounds(currentY, currentX) || grid[currentY][currentX] != word[i]) {
-                    match = false
-                    break
-                }
-            }
-            if (match) {
-                counter++
-            }
-        }
-        return counter
     }
 }
