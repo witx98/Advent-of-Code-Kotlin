@@ -6,17 +6,17 @@ fun main() {
     secondPart(incorrectPages, rules).println()
 }
 
-fun groupPages(pages: List<List<Int>>, rules: Map<Int, List<Int>>): Pair<List<List<Int>>, List<List<Int>>> {
+private fun groupPages(pages: List<List<Int>>, rules: Map<Int, List<Int>>): Pair<List<List<Int>>, List<List<Int>>> {
     return pages.partition { page ->
         isCorrectPage(page, rules).first
     }
 }
 
-fun getPages(pagesLines: List<String>): List<List<Int>> {
+private fun getPages(pagesLines: List<String>): List<List<Int>> {
     return pagesLines.map { it.trim().split(",").map(String::toInt) }
 }
 
-fun getRules(rulesLines: List<String>): Map<Int, List<Int>> {
+private fun getRules(rulesLines: List<String>): Map<Int, List<Int>> {
     return rulesLines.map {
         val (left, right) = it.trim().split("|").map(String::toInt)
         left to right
@@ -27,13 +27,13 @@ private fun firstPart(pages: List<List<Int>>): Int {
     return pages.sumOf { page -> page[page.size / 2] }
 }
 
-fun secondPart(incorrectPages: List<List<Int>>, rules: Map<Int, List<Int>>): Int {
+private fun secondPart(incorrectPages: List<List<Int>>, rules: Map<Int, List<Int>>): Int {
     return incorrectPages
         .map { page -> correctPage(page.toMutableList(), rules) }
         .sumOf { correctedPage -> correctedPage[correctedPage.size / 2] }
 }
 
-fun correctPage(incorrectPage: MutableList<Int>, rules: Map<Int, List<Int>>): List<Int> {
+private fun correctPage(incorrectPage: MutableList<Int>, rules: Map<Int, List<Int>>): List<Int> {
     var (isCorrect, indices) = isCorrectPage(incorrectPage, rules)
     while (!isCorrect) {
         val (first, second) = indices
@@ -53,7 +53,7 @@ private fun swap(correctedPage: MutableList<Int>, first: Int, second: Int) {
     correctedPage[second] = temp
 }
 
-fun isCorrectPage(page: List<Int>, rules: Map<Int, List<Int>>): Pair<Boolean, Pair<Int, Int>> {
+private fun isCorrectPage(page: List<Int>, rules: Map<Int, List<Int>>): Pair<Boolean, Pair<Int, Int>> {
     for (i in page.indices) {
         for (j in 0 until i) {
             if (page[j] in rules.getOrDefault(page[i], listOf())) {
