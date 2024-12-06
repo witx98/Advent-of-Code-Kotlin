@@ -32,15 +32,11 @@ enum class Direction(val dy: Int, val dx: Int) {
     UP_LEFT(-1, -1);
 
     fun rotate(rotation: Rotation): Direction {
-        val directions = entries.toTypedArray()
-        val currentIndex = directions.indexOf(this)
-        val offset = if (rotation == Rotation.RIGHT) 2 else -2
-        val newIndex = (currentIndex + offset + directions.size) % directions.size
-        return directions[newIndex]
+        return entries[(ordinal + rotation.value) % entries.size]
     }
 
-    enum class Rotation {
-        LEFT, RIGHT
+    enum class Rotation(val value: Int) {
+        LEFT(-2), RIGHT(2)
     }
 
 }
