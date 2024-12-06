@@ -47,8 +47,8 @@ data class Point(val x: Int, val y: Int) {
 
 class Grid(lines: List<String>) {
     private val grid: List<List<Char>> = lines.map { line -> line.toCharArray().toList() }
-    val columns = grid.first().size
-    val rows = grid.size
+    private val columns = grid.first().size
+    private val rows = grid.size
     val indices = sequence {
         for (y in 0 until rows) {
             for (x in 0 until columns) {

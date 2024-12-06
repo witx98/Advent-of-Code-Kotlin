@@ -1,9 +1,33 @@
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
+import kotlin.time.measureTimedValue
+
 fun main() {
     val input = readInput("day-06-input")
     val grid = Grid(input)
 
-    firstPart(grid).println()
-    secondPart(grid).println()
+    val (result, duration) = measureTimedValue {
+        firstPart(grid)
+    }
+    println("First part duration: $duration, and result: $result")
+
+    val (result2, duration2) = measureTimedValue {
+        secondPart(grid)
+    }
+    println("Second part duration: $duration2, and result: $result2")
+
+    val (result3, duration3) = measureTimedValue {
+        secondPartAsync(grid)
+    }
+    println("Second part async duration: $duration3, and result: $result3")
+
+    val (result4, duration4) = measureTimedValue {
+        secondPartParallel(grid)
+    }
+    println("Second part parallel duration: $duration4, and result: $result4")
+
+
 }
 
 private fun walk(grid: Grid, start: Point, obstacle: Point? = null): Set<Point>? {
@@ -40,4 +64,27 @@ private fun secondPart(grid: Grid): Int {
     return visitedPoints.count { obstacle ->
         obstacle != sp && walk(grid, sp, obstacle) == null
     }
+}
+
+private fun secondPartAsync(grid: Grid): Int {
+    val sp = grid.indices.first { grid.getAt(it) == '^' }
+    val visitedPoints = walk(grid, sp)!!
+
+    return runBlocking {
+        visitedPoints.map { obstacle ->
+            async {
+                obstacle != sp && walk(grid, sp, obstacle) == null
+            }
+        }.awaitAll().count { it }
+    }
+}
+
+
+private fun secondPartParallel(grid: Grid): Int {
+    val sp = grid.indices.first { grid.getAt(it) == '^' }
+    val visitedPoints = walk(grid, sp)!!
+    return visitedPoints.parallelStream()
+        .filter { obstacle -> obstacle != sp }
+        .map { obstacle -> walk(grid, sp, obstacle) }
+        .filter { it == null }.count().toInt()
 }
