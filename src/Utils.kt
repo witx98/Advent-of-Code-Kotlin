@@ -31,6 +31,18 @@ enum class Direction(val dy: Int, val dx: Int) {
     LEFT(0, -1),
     UP_LEFT(-1, -1);
 
+    fun rotate(rotation: Rotation): Direction {
+        val directions = entries.toTypedArray()
+        val currentIndex = directions.indexOf(this)
+        val offset = if (rotation == Rotation.RIGHT) 2 else -2
+        val newIndex = (currentIndex + offset + directions.size) % directions.size
+        return directions[newIndex]
+    }
+
+    enum class Rotation {
+        LEFT, RIGHT
+    }
+
 }
 
 data class Point(val x: Int, val y: Int) {
