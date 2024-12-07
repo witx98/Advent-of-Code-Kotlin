@@ -9,6 +9,7 @@ fun main() {
     val input = readInput("day-07-input")
     val retrieveEquations = retrieveEquations(input)
     firstPart(retrieveEquations).println()
+
     val (result, duration) = measureTimedValue {
         secondPartIterative(retrieveEquations)
     }
@@ -40,61 +41,9 @@ fun main() {
     println("Second part async recursive duration: $duration6, and result: $result6")
 }
 
-private fun secondPartIterative(equations: List<Pair<Long, List<Long>>>): Long {
-    val operators = listOf("+", "*", "||")
-
-    return equations.sumOf {
-        isPossible(it.first, it.second, operators)
-    }
-}
-
-
-private fun secondPartIterativeAsync(equations: List<Pair<Long, List<Long>>>): Long {
-    val operators = listOf("+", "*", "||")
-
-    return runBlocking(Dispatchers.Default) {
-        equations.map {
-            async {
-                isPossible(it.first, it.second, operators)
-            }
-        }.awaitAll().sum()
-    }
-}
-
-private fun secondPartIterativeParallel(equations: List<Pair<Long, List<Long>>>): Long {
-    val operators = listOf("+", "*", "||")
-
-    return equations.parallelStream().map {
-        isPossible(it.first, it.second, operators)
-    }.reduce(0L, Long::plus)
-}
-
-private fun secondPartRecursive(equations: List<Pair<Long, List<Long>>>): Long {
-    return equations.filter { (target, numbers) -> target in recurse(numbers.first(), numbers.drop(1)) }
-        .sumOf { (target, _) -> target }
-}
-
-private fun secondPartRecursiveAsync(equations: List<Pair<Long, List<Long>>>): Long {
-    return runBlocking(Dispatchers.Default) {
-        equations.map { (target, numbers) ->
-            async {
-                if(target in recurse(numbers.first(), numbers.drop(1))) target else 0L
-            }
-        }.awaitAll().sum()
-    }
-}
-
-private fun secondPartRecursiveParallel(equations: List<Pair<Long, List<Long>>>): Long {
-    return equations.parallelStream().map { (target, numbers) ->
-        if (target in recurse(numbers.first(), numbers.drop(1))) target else 0L
-    }.reduce(0L, Long::plus)
-}
-
-private fun recurse(result: Long, numbers: List<Long>): List<Long> {
-    if (numbers.isEmpty()) return listOf(result)
-    return recurse(result + numbers.first(), numbers.drop(1)) +
-            recurse(result * numbers.first(), numbers.drop(1)) +
-            recurse("$result${numbers.first()}".toLong(), numbers.drop(1))
+private fun retrieveEquations(input: List<String>) = input.map { line ->
+    val (first, second) = line.trim().split(":")
+    first.toLong() to second.trim().split(" ").map { it.toLong() }
 }
 
 private fun firstPart(equations: List<Pair<Long, List<Long>>>): Long {
@@ -104,12 +53,27 @@ private fun firstPart(equations: List<Pair<Long, List<Long>>>): Long {
     }
 }
 
-private fun retrieveEquations(input: List<String>) = input.map { line ->
-    val (first, second) = line.trim().split(":")
-    first.toLong() to second.trim().split(" ").map { it.toLong() }
+private fun secondPartRecursive(equations: List<Pair<Long, List<Long>>>): Long {
+    return equations.filter { (target, numbers) -> target in recurse(numbers.first(), numbers.drop(1)) }
+        .sumOf { (target, _) -> target }
 }
 
-fun isPossible(result: Long, numbers: List<Long>, operators: List<String>): Long {
+private fun recurse(result: Long, numbers: List<Long>): List<Long> {
+    if (numbers.isEmpty()) return listOf(result)
+    return recurse(result + numbers.first(), numbers.drop(1)) +
+            recurse(result * numbers.first(), numbers.drop(1)) +
+            recurse("$result${numbers.first()}".toLong(), numbers.drop(1))
+}
+
+private fun secondPartIterative(equations: List<Pair<Long, List<Long>>>): Long {
+    val operators = listOf("+", "*", "||")
+
+    return equations.sumOf {
+        isPossible(it.first, it.second, operators)
+    }
+}
+
+private fun isPossible(result: Long, numbers: List<Long>, operators: List<String>): Long {
     val operatorsPlaces = numbers.size - 1
     val numberOfOperators = operators.size
     val allCombinations = numberOfOperators.toDouble().pow(operatorsPlaces.toDouble()).toInt()
@@ -130,7 +94,7 @@ fun isPossible(result: Long, numbers: List<Long>, operators: List<String>): Long
     return 0
 }
 
-fun calculate(numbers: List<Long>, operators: List<String>): Long {
+private fun calculate(numbers: List<Long>, operators: List<String>): Long {
     var result = numbers.first()
     for (i in operators.indices) {
         val next = numbers[i + 1]
@@ -142,4 +106,40 @@ fun calculate(numbers: List<Long>, operators: List<String>): Long {
         }
     }
     return result
+}
+
+/* ASYNC VARIANTS */
+
+private fun secondPartIterativeAsync(equations: List<Pair<Long, List<Long>>>): Long {
+    val operators = listOf("+", "*", "||")
+    return runBlocking(Dispatchers.Default) {
+        equations.map {
+            async {
+                isPossible(it.first, it.second, operators)
+            }
+        }.awaitAll().sum()
+    }
+}
+
+private fun secondPartIterativeParallel(equations: List<Pair<Long, List<Long>>>): Long {
+    val operators = listOf("+", "*", "||")
+    return equations.parallelStream().map {
+        isPossible(it.first, it.second, operators)
+    }.reduce(0L, Long::plus)
+}
+
+private fun secondPartRecursiveAsync(equations: List<Pair<Long, List<Long>>>): Long {
+    return runBlocking(Dispatchers.Default) {
+        equations.map { (target, numbers) ->
+            async {
+                if (target in recurse(numbers.first(), numbers.drop(1))) target else 0L
+            }
+        }.awaitAll().sum()
+    }
+}
+
+private fun secondPartRecursiveParallel(equations: List<Pair<Long, List<Long>>>): Long {
+    return equations.parallelStream().map { (target, numbers) ->
+        if (target in recurse(numbers.first(), numbers.drop(1))) target else 0L
+    }.reduce(0L, Long::plus)
 }
