@@ -43,6 +43,11 @@ enum class Direction(val dy: Int, val dx: Int) {
 
 data class Point(val x: Int, val y: Int) {
     operator fun plus(direction: Direction) = Point(x + direction.dx, y + direction.dy)
+    operator fun minus(direction: Direction) = Point(x - direction.dx, y - direction.dy)
+    operator fun times(scalar: Int) = Point(x * scalar, y * scalar)
+    operator fun plus(other: Point) = Point(x + other.x, y + other.y)
+    operator fun minus(other: Point) = Point(x - other.x, y - other.y)
+
 }
 
 class Grid(lines: List<String>) {
