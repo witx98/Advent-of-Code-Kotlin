@@ -1,7 +1,7 @@
 import kotlin.math.absoluteValue
 
 fun main() {
-    val input = readInput("day-02-input")
+    val input = readInputLines("day-02-input")
     val firstResult = firstPart(input)
     val secondResult = secondPart(input)
     println(firstResult)

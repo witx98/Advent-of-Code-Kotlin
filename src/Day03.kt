@@ -1,5 +1,5 @@
 fun main() {
-    val lines = readInput("day-03-input")
+    val lines = readInputLines("day-03-input")
 
     firstPart(lines).println()
     secondPart(lines).println()

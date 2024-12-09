@@ -6,7 +6,7 @@ import kotlin.math.pow
 import kotlin.time.measureTimedValue
 
 fun main() {
-    val input = readInput("day-07-input")
+    val input = readInputLines("day-07-input")
     val retrieveEquations = retrieveEquations(input)
     firstPart(retrieveEquations).println()
 

@@ -2,7 +2,7 @@ import kotlin.math.abs
 
 
 fun main() {
-    val lines = readInput("day-01-input")
+    val lines = readInputLines("day-01-input")
     val firstResult = firstPart(lines)
     val secondResult = secondPart(lines)
 

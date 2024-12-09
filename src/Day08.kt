@@ -1,5 +1,5 @@
 fun main() {
-    val readInput = readInput("day-08-input")
+    val readInput = readInputLines("day-08-input")
     val grid = Grid(readInput)
 
     firstPart(grid).println()

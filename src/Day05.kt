@@ -1,5 +1,5 @@
 fun main() {
-    val (rulesLines, pagesLines) = readInput("day-05-input").filter { it.isNotBlank() }.partition { '|' in it }
+    val (rulesLines, pagesLines) = readInputLines("day-05-input").filter { it.isNotBlank() }.partition { '|' in it }
     val rules = getRules(rulesLines)
     val (correctPages, incorrectPages) = groupPages(getPages(pagesLines), rules)
     firstPart(correctPages).println()

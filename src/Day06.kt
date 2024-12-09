@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.time.measureTimedValue
 
 fun main() {
-    val input = readInput("day-06-input")
+    val input = readInputLines("day-06-input")
     val grid = Grid(input)
 
     val (result, duration) = measureTimedValue {
