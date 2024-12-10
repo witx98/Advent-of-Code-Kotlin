@@ -39,6 +39,9 @@ fun main() {
         secondPartRecursiveParallel(retrieveEquations)
     }
     println("Second part async recursive duration: $duration6, and result: $result6")
+
+
+    firstPartRecursive(retrieveEquations).println()
 }
 
 private fun retrieveEquations(input: List<String>) = input.map { line ->
@@ -52,6 +55,18 @@ private fun firstPart(equations: List<Pair<Long, List<Long>>>): Long {
         isPossible(result, numbers, operators)
     }
 }
+
+private fun firstPartRecursive(equations: List<Pair<Long, List<Long>>>): Long {
+    return equations.filter { (target, numbers) -> target in firstRecurse(numbers.first(), numbers.drop(1)) }
+        .sumOf { (target, _) -> target }
+}
+
+private fun firstRecurse(result: Long, numbers: List<Long>): List<Long> {
+    if (numbers.isEmpty()) return listOf(result)
+    return firstRecurse(result + numbers.first(), numbers.drop(1)) +
+            firstRecurse(result * numbers.first(), numbers.drop(1))
+}
+
 
 private fun secondPartRecursive(equations: List<Pair<Long, List<Long>>>): Long {
     return equations.filter { (target, numbers) -> target in recurse(numbers.first(), numbers.drop(1)) }
