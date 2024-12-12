@@ -33,7 +33,7 @@ enum class Direction(val dy: Int, val dx: Int) {
     UP_LEFT(-1, -1);
 
     fun rotate(rotation: Rotation): Direction {
-        return entries[(ordinal + rotation.value) % entries.size]
+        return entries[(ordinal + rotation.value).mod(entries.size)]
     }
 
     enum class Rotation(val value: Int) {
