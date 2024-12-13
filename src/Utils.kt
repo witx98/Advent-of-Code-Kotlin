@@ -51,6 +51,9 @@ data class Point(val x: Int, val y: Int) {
 
 }
 
+data class Vec2(val x: Long, val y: Long)
+
+
 class Grid(lines: List<String>) {
     private val grid: List<List<Char>> = lines.map { line -> line.toCharArray().toList() }
     private val columns = grid.first().size
