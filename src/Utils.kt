@@ -66,6 +66,15 @@ class Grid(lines: List<String>) {
         }
     }
 
+    fun print() {
+        for (y in 0 until columns) {
+            for (x in 0 until rows) {
+                print(grid[y][x])
+            }
+            println()
+        }
+    }
+
     fun getAt(p: Point): Char = grid[p.y][p.x]
 
     fun getAsInt(p: Point): Int = getAt(p).toString().toInt()
