@@ -1,3 +1,5 @@
+import Direction.Companion.BASIC_DIRECTIONS
+
 fun main() {
     val lines = readInputLines("day-12-input")
     val grid = Grid(lines)
@@ -5,7 +7,6 @@ fun main() {
     secondPart(grid).println()
 }
 
-private val DIRECTIONS = listOf(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
 
 private fun firstPart(grid: Grid): Int {
     return getAreas(grid).sumOf { it.size * calculatePerimeter(it) }
@@ -22,7 +23,7 @@ private fun getAreas(grid: Grid): List<List<Point>> {
         visited.add(current)
         area.add(current)
 
-        for (direction in DIRECTIONS) {
+        for (direction in BASIC_DIRECTIONS) {
             val newPoint = current.plus(direction)
             dfs(newPoint, garden, area)
         }
@@ -37,7 +38,7 @@ private fun getAreas(grid: Grid): List<List<Point>> {
 
 fun calculatePerimeter(area: List<Point>): Int {
     return area.sumOf { point ->
-        DIRECTIONS.count { direction ->
+        BASIC_DIRECTIONS.count { direction ->
             !area.contains(point.plus(direction))
         }
     }
@@ -49,7 +50,7 @@ private fun secondPart(grid: Grid): Int {
 
 private fun sides(area: List<Point>): Int {
     val lookup: Set<Point> = area.toSet()
-    return DIRECTIONS.sumOf { direction ->
+    return BASIC_DIRECTIONS.sumOf { direction ->
         var borderCount = 0
         val visited = mutableSetOf<Point>()
         for (point in area) {

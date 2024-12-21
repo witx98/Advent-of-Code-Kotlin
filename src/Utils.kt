@@ -33,6 +33,10 @@ enum class Direction(val dy: Int, val dx: Int) {
     LEFT(0, -1),
     UP_LEFT(-1, -1);
 
+    companion object {
+        val BASIC_DIRECTIONS = setOf(UP, RIGHT, DOWN, LEFT)
+    }
+
     fun rotate(rotation: Rotation): Direction {
         return entries[(ordinal + rotation.value).mod(entries.size)]
     }

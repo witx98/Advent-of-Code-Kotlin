@@ -1,11 +1,11 @@
+import Direction.Companion.BASIC_DIRECTIONS
+
 fun main() {
     val lines = readInputLines("day-10-input")
     val g = Grid(lines)
     firstPart(g).println()
     secondPart(g).println()
 }
-
-private val DIRECTIONS = listOf(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
 
 private fun firstPart(grid: Grid): Int {
     val startingPoints = grid.indices.filter { grid.getAt(it) == '0' }
@@ -31,7 +31,7 @@ private fun solveFirstMaze(startingPoint: Point, grid: Grid): Set<Point> {
             peaks.add(current)
         }
 
-        for (direction in DIRECTIONS) {
+        for (direction in BASIC_DIRECTIONS) {
             val newPoint = current.plus(direction)
             dfs(current, newPoint)
         }
@@ -64,7 +64,7 @@ private fun solveSecondMaze(startingPoint: Point, grid: Grid): Set<List<Point>> 
             paths.add(currentPath)
         }
 
-        for (direction in DIRECTIONS) {
+        for (direction in BASIC_DIRECTIONS) {
             val newPoint = current.plus(direction)
             dfs(current, newPoint, currentPath)
         }

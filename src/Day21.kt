@@ -1,7 +1,6 @@
+import Direction.Companion.BASIC_DIRECTIONS
 import Tile.*
 import java.util.*
-
-private val BASIC_DIRECTIONS = listOf(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
 
 fun main() {
     val input = readInputLines("day-21-input")
