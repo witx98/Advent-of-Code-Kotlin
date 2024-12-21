@@ -2,6 +2,7 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.abs
 
 /**
  * Reads lines from the given input txt file.
@@ -49,7 +50,27 @@ data class Point(val x: Int, val y: Int) {
     operator fun plus(other: Point) = Point(x + other.x, y + other.y)
     operator fun minus(other: Point) = Point(x - other.x, y - other.y)
 
+    fun distance(other: Point): Int = abs(x - other.x) + abs(y - other.y)
+
+    fun neighbors(withDiagonal: Boolean = false): List<Point> {
+        return buildList {
+            add(this@Point + Direction.UP)
+            add(this@Point + Direction.RIGHT)
+            add(this@Point + Direction.DOWN)
+            add(this@Point + Direction.DOWN)
+            if (withDiagonal) {
+                add(this@Point + Direction.UP_RIGHT)
+                add(this@Point + Direction.DOWN_RIGHT)
+                add(this@Point + Direction.DOWN_LEFT)
+                add(this@Point + Direction.UP_LEFT)
+            }
+        }
+    }
 }
+
+fun coordSequence(width: Int, height: Int) = coordSequence(0 until width, 0 until height)
+
+fun coordSequence(xRange: IntRange, yRange: IntRange) = yRange.asSequence().flatMap { y -> xRange.asSequence().map { x -> Point(x, y) } }
 
 data class Vec2(val x: Long, val y: Long)
 
