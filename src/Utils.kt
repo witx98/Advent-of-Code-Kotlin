@@ -57,7 +57,7 @@ data class Point(val x: Int, val y: Int) {
             add(this@Point + Direction.UP)
             add(this@Point + Direction.RIGHT)
             add(this@Point + Direction.DOWN)
-            add(this@Point + Direction.DOWN)
+            add(this@Point + Direction.LEFT)
             if (withDiagonal) {
                 add(this@Point + Direction.UP_RIGHT)
                 add(this@Point + Direction.DOWN_RIGHT)
@@ -104,4 +104,36 @@ class Grid(lines: List<String>) {
         point.y in (0 + margin.toInt()) until (rows - margin.toInt())
                 && point.x in (0 + margin.toInt()) until (columns - margin.toInt())
 
+}
+
+class GenericGrid<T>(
+    val width: Int,
+    val height: Int,
+    val fields: MutableList<T>
+) {
+    val topLeft = Point(0, 0)
+    val bottomRight = Point(width - 1, height - 1)
+
+    operator fun set(
+        at: Point,
+        it: T,
+    ) {
+        if (!outside(at)) {
+            fields[at.x + at.y * width] = it
+        }
+    }
+
+    val indices = sequence {
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                yield(Point(x, y))
+            }
+        }
+    }
+
+    operator fun get(at: Point) = if (outside(at)) null else fields[at.x + at.y * width]
+
+    fun within(it: Point) = it.y in 0 until height && it.x in 0 until width
+
+    fun outside(it: Point) = !within(it)
 }

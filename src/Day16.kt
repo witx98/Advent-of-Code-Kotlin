@@ -9,8 +9,8 @@ fun main() {
     secondPart(g).println()
 }
 
-data class State(val point: Point, val direction: Direction)
-data class Path(val state: State, val distance: Int, val previous: List<State>)
+private data class State(val point: Point, val direction: Direction)
+private data class Path(val state: State, val distance: Int, val previous: List<State>)
 
 
 private fun secondPart(grid: Grid): Int {
