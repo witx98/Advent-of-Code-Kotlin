@@ -113,19 +113,10 @@ class Grid(lines: List<String>) {
 class GenericGrid<T>(
     val width: Int,
     val height: Int,
-    val fields: MutableList<T>
+    val fields: List<T>
 ) {
     val topLeft = Point(0, 0)
     val bottomRight = Point(width - 1, height - 1)
-
-    operator fun set(
-        at: Point,
-        it: T,
-    ) {
-        if (!outside(at)) {
-            fields[at.x + at.y * width] = it
-        }
-    }
 
     val indices = sequence {
         for (y in 0 until height) {

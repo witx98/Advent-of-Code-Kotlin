@@ -9,20 +9,20 @@ fun main() {
 }
 
 private fun firstPart(input: List<String>): Long {
-    val layers = buildLayers(2)
+    val bottomLayer = buildLayers(2)
     return input.sumOf { line ->
-        getIntValue(line) * layers.getShortestLength(line)
+        getIntValue(line) * bottomLayer.getShortestLength(line)
     }
 }
 
 private fun secondPart(input: List<String>): Long {
-    val layers = buildLayers(25)
+    val bottomLayer = buildLayers(25)
     return input.sumOf { line ->
-        getIntValue(line) * layers.getShortestLength(line)
+        getIntValue(line) * bottomLayer.getShortestLength(line)
     }
 }
 
-enum class Tile(var char: Char) {
+private enum class Tile(var char: Char) {
     UP('^'),
     DOWN('v'),
     LEFT('<'),
@@ -42,11 +42,11 @@ enum class Tile(var char: Char) {
     ;
 
     companion object {
-        fun fromChar(c: Char) = Tile.entries.first { it.char == c }
+        fun from(c: Char) = Tile.entries.first { it.char == c }
     }
 }
 
-private fun Direction.toCharCommand(): Char {
+private fun Direction.toChar(): Char {
     return when (this) {
         Direction.UP -> UP.char
         Direction.DOWN -> DOWN.char
@@ -62,11 +62,11 @@ private data class KeySequence(val moves: List<Direction>, val current: Point) :
     fun add(direction: Direction) = KeySequence(moves + direction, current + direction)
 
     fun asString() = moves.joinToString("") {
-        it.toCharCommand().toString()
+        it.toChar().toString()
     }
 }
 
-class Layer(private val keyboard: GenericGrid<Tile>, private val lowerLayer: Layer?) {
+private class Layer(private val keyboard: GenericGrid<Tile>, private val lowerLayer: Layer?) {
 
     private val keySequenceCache = mutableMapOf<Pair<Point, Point>, List<KeySequence>>()
     private val movesCache = mutableMapOf<String, List<String>>()
@@ -90,18 +90,17 @@ class Layer(private val keyboard: GenericGrid<Tile>, private val lowerLayer: Lay
             var outputs = listOf("")
 
             input.forEach { c ->
-                var targetPos = getPosition(Tile.fromChar(c))
+                val targetPosition = getPosition(Tile.from(c))
 
-                val moves = shortestPaths(position, targetPos)
-                outputs =
-                    outputs.flatMap { output ->
+                val moves = shortestPaths(position, targetPosition)
+                outputs = outputs.flatMap { output ->
                         moves.map { path ->
                             output + path.asString()
                         }
                     }
 
                 outputs = outputs.map { it + "A" }
-                position = targetPos
+                position = targetPosition
             }
             outputs
         }
@@ -141,52 +140,40 @@ class Layer(private val keyboard: GenericGrid<Tile>, private val lowerLayer: Lay
     }
 }
 
-private fun numericGrid(): GenericGrid<Tile> {
-    val grid = GenericGrid(
-        width = 3,
-        height = 4,
-        fields = buildList {
-            repeat(3 * 4) {
-                add(EMPTY_SPACE)
-            }
-        }.toMutableList(),
-    )
+private fun numericGrid(): GenericGrid<Tile> = GenericGrid(
+    width = 3,
+    height = 4,
+    fields = buildList {
+        add(N7)
+        add(N8)
+        add(N9)
+        add(N4)
+        add(N5)
+        add(N6)
+        add(N1)
+        add(N2)
+        add(N3)
+        add(EMPTY_SPACE)
+        add(N0)
+        add(A)
+    },
+)
 
-    grid[Point(0, 0)] = N7
-    grid[Point(1, 0)] = N8
-    grid[Point(2, 0)] = N9
-    grid[Point(0, 1)] = N4
-    grid[Point(1, 1)] = N5
-    grid[Point(2, 1)] = N6
-    grid[Point(0, 2)] = N1
-    grid[Point(1, 2)] = N2
-    grid[Point(2, 2)] = N3
-    grid[Point(0, 3)] = EMPTY_SPACE
-    grid[Point(1, 3)] = N0
-    grid[Point(2, 3)] = A
-    return grid
-}
 
-private fun arrowGrid(): GenericGrid<Tile> {
-    val grid = GenericGrid(
-        width = 3,
-        height = 2,
-        fields = buildList {
-            repeat(3 * 2) {
-                add(EMPTY_SPACE)
-            }
-        }.toMutableList(),
-    )
-    grid[Point(0, 0)] = EMPTY_SPACE
-    grid[Point(1, 0)] = UP
-    grid[Point(2, 0)] = A
-    grid[Point(0, 1)] = LEFT
-    grid[Point(1, 1)] = DOWN
-    grid[Point(2, 1)] = RIGHT
-    return grid
-}
+private fun arrowGrid(): GenericGrid<Tile> = GenericGrid(
+    width = 3,
+    height = 2,
+    fields = buildList {
+            add(EMPTY_SPACE)
+            add(UP)
+            add(A)
+            add(LEFT)
+            add(DOWN)
+            add(RIGHT)
+    }
+)
 
-fun buildLayers(n: Int): Layer {
+private fun buildLayers(n: Int): Layer {
     var currentLayer: Layer? = null
 
     repeat(n) {
