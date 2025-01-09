@@ -6,14 +6,15 @@ fun main() {
 }
 
 private fun firstPart(input: List<String>): Long {
-    return input.sumOf { seed -> sequenceA(seed.toLong()).last() }
+    return input.sumOf { seed -> monkeySequence(seed.toLong()).last() }
 
 }
 
 private fun secondPart(input: List<String>): Long {
     val (bestSequence, bestValue) = input.asSequence()
-        .flatMap { sequenceB(it.toLong()).distinctBy { (d, _) -> d } }
-        .groupingBy { (d, _) -> d  }.fold(
+        .flatMap { priceSequence(it.toLong()).distinctBy { (d, _) -> d } }
+        .groupingBy { (d, _) -> d  }
+        .fold(
             initialValueSelector = { _, _ -> 0L },
             operation = { _, acc, (_, count) -> acc + count }
         ).maxBy { it.value }
@@ -22,14 +23,14 @@ private fun secondPart(input: List<String>): Long {
     return bestValue
 }
 
-fun sequenceB(start: Long): Sequence<Pair<List<Int>, Int>> {
-    return sequenceA(start)
+fun priceSequence(start: Long): Sequence<Pair<List<Int>, Int>> {
+    return monkeySequence(start)
         .map { "$it".last().digitToInt() }
         .zipWithNext { a, b -> b to (a - b) }
         .windowed(4) { list -> list.map { it.second } to list.last().first }
 }
 
-fun sequenceA(seed: Long): Sequence<Long> {
+fun monkeySequence(seed: Long): Sequence<Long> {
     return generateSequence(seed) { current ->
         val first = (current * 64).mix(current).prune()
         val second = (first / 32).mix(first).prune()
