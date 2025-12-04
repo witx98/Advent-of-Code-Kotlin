@@ -1,6 +1,5 @@
 package y2025
 
-import Direction
 import Grid
 import Point
 import println
@@ -16,24 +15,40 @@ fun main() {
     secondResult.println()
 }
 
-private fun secondPart(lines: List<String>) {
+private fun secondPart(lines: List<String>): Int {
+    val grid = Grid(lines)
+    val removedRolls = mutableSetOf<Point>()
+    var amount = gatherRemovedRolls(grid, removedRolls)
+    while (amount > 0) {
+        amount = gatherRemovedRolls(grid, removedRolls)
+    }
 
+    return removedRolls.size
 }
 
 private fun firstPart(lines: List<String>): Int {
     val grid = Grid(lines)
-    return grid.indices.count { point ->
-        if (grid.getAt(point) != '@') return@count false
-
-        val neighborRollCount = Direction.entries.count { direction ->
-            checkNeighbour(grid, point, direction)
-        }
-        neighborRollCount < 4
-    }
+    val removedRolls = mutableSetOf<Point>()
+    return gatherRemovedRolls(grid, removedRolls)
 }
 
-private fun checkNeighbour(grid: Grid, point: Point, direction: Direction): Boolean {
-    val neighbour = point + direction
+private fun gatherRemovedRolls(grid: Grid, removedRolls: MutableSet<Point>): Int {
+    val removedAmount = grid.indices.count { point ->
+        if (grid.getAt(point) != '@') return@count false
+        if (point in removedRolls) return@count false
 
-    return grid.isWithinBounds(neighbour) && grid.getAt(neighbour) == '@'
+        val neighborRollCount = point.neighbors(true).count { neighbor ->
+            checkNeighbour(grid, neighbor, removedRolls)
+        }
+        val canBeRemoved = neighborRollCount < 4
+        if (canBeRemoved) {
+            removedRolls.add(point)
+        }
+        canBeRemoved
+    }
+    return removedAmount
+}
+
+private fun checkNeighbour(grid: Grid, neighbour: Point, removedRolls: Set<Point>): Boolean {
+    return grid.isWithinBounds(neighbour) && grid.getAt(neighbour) == '@' && neighbour !in removedRolls
 }
