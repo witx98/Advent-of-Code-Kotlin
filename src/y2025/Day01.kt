@@ -21,13 +21,8 @@ fun firstPart(lines: List<String>): Int {
     var current = 50
     var counter = 0
     lines.forEach {
-        val (first, second) = parseLine(it)
-        current = if (first == 'L') {
-            (current - second) % 100
-        } else {
-            (current + second) % 100
-        }
-
+        val rotation = parseLine(it)
+        current = (current + rotation) % 100
 
         if (current == 0) {
             counter++
@@ -36,6 +31,11 @@ fun firstPart(lines: List<String>): Int {
     return counter
 }
 
-fun parseLine(line: String): Pair<Char, Int> {
- return line[0] to line.substring(1).toInt()
+fun parseLine(line: String): Int {
+    val value = line.substring(1).toInt()
+    return when (line[0]) {
+        'L' -> -value
+        'R' -> value
+        else -> throw IllegalArgumentException()
+    }
 }
