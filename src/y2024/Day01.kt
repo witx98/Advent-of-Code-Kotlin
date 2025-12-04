@@ -1,8 +1,12 @@
+package y2024
+
+import println
+import readInputLines
 import kotlin.math.abs
 
 
 fun main() {
-    val lines = readInputLines("day-01-input")
+    val lines = readInputLines(2024, "day-01-input")
     val firstResult = firstPart(lines)
     val secondResult = secondPart(lines)
 

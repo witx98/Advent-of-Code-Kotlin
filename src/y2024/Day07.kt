@@ -1,12 +1,16 @@
+package y2024
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import println
+import readInputLines
 import kotlin.math.pow
 import kotlin.time.measureTimedValue
 
 fun main() {
-    val input = readInputLines("day-07-input")
+    val input = readInputLines(2024, "day-07-input")
     val retrieveEquations = retrieveEquations(input)
     firstPart(retrieveEquations).println()
 

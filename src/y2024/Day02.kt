@@ -1,7 +1,10 @@
+package y2024
+
+import readInputLines
 import kotlin.math.absoluteValue
 
 fun main() {
-    val input = readInputLines("day-02-input")
+    val input = readInputLines(2024, "day-02-input")
     val firstResult = firstPart(input)
     val secondResult = secondPart(input)
     println(firstResult)

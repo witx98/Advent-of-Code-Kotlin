@@ -1,5 +1,12 @@
+package y2024
+
+import Grid
+import Point
+import println
+import readInputLines
+
 fun main() {
-    val readInput = readInputLines("day-08-input")
+    val readInput = readInputLines(2024, "day-08-input")
     val grid = Grid(readInput)
 
     firstPart(grid).println()

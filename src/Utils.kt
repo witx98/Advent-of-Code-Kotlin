@@ -7,8 +7,8 @@ import kotlin.math.abs
 /**
  * Reads lines from the given input txt file.
  */
-fun readInputLines(name: String) = readInput(name).lines()
-fun readInput(name: String) = Path("src/data/$name.txt").readText().trim()
+fun readInputLines(year: Int, name: String) = readInput(year, name).lines()
+fun readInput(year: Int, name: String) = Path("src/data/y$year/$name.txt").readText().trim()
 
 /**
  * Converts string to md5 hash.

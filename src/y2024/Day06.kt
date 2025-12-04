@@ -1,10 +1,16 @@
+package y2024
+
+import Direction
+import Grid
+import Point
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import readInputLines
 import kotlin.time.measureTimedValue
 
 fun main() {
-    val input = readInputLines("day-06-input")
+    val input = readInputLines(2024, "day-06-input")
     val grid = Grid(input)
 
     val (result, duration) = measureTimedValue {

@@ -1,7 +1,13 @@
+package y2024
+
 import Direction.Companion.BASIC_DIRECTIONS
+import Grid
+import Point
+import println
+import readInputLines
 
 fun main() {
-    val lines = readInputLines("day-12-input")
+    val lines = readInputLines(2024, "day-12-input")
     val grid = Grid(lines)
     firstPart(grid).println()
     secondPart(grid).println()

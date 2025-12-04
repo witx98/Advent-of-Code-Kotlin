@@ -1,5 +1,10 @@
+package y2024
+
+import println
+import readInputLines
+
 fun main() {
-    val (rulesLines, pagesLines) = readInputLines("day-05-input").filter { it.isNotBlank() }.partition { '|' in it }
+    val (rulesLines, pagesLines) = readInputLines(2024, "day-05-input").filter { it.isNotBlank() }.partition { '|' in it }
     val rules = getRules(rulesLines)
     val (correctPages, incorrectPages) = groupPages(getPages(pagesLines), rules)
     firstPart(correctPages).println()

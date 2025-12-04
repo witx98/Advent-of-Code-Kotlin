@@ -1,7 +1,13 @@
+package y2024
+
+import Vec2
+import println
+import readInput
+
 data class Machine(val dA: Vec2, val dB: Vec2, val prize: Vec2)
 
 fun main() {
-    val machines: List<Machine> = machines(readInput("day-13-input"))
+    val machines: List<Machine> = machines(readInput(2024,  "day-13-input"))
     firstPart(machines).println()
     secondPart(machines).println()
 }

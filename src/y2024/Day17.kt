@@ -1,3 +1,7 @@
+package y2024
+
+import println
+import readInputLines
 import kotlin.math.pow
 
 data class Program(var a: Long, var b: Long, var c: Long, val instructions: List<Int>) {
@@ -43,7 +47,7 @@ fun parseProgram(lines: List<String>): Program {
 
 
 fun main() {
-    val input = readInputLines("day-17-input")
+    val input = readInputLines(2024, "day-17-input")
     val program = parseProgram(input)
 
     fun runCorrupted(a: Long): List<Int> {

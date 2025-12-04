@@ -1,9 +1,16 @@
+package y2024
+
+import Direction
 import Direction.Companion.BASIC_DIRECTIONS
-import Tile.*
+import GenericGrid
+import Point
+import println
+import readInputLines
+import y2024.Tile.*
 import java.util.*
 
 fun main() {
-    val input = readInputLines("day-21-input")
+    val input = readInputLines(2024, "day-21-input")
     firstPart(input).println()
     secondPart(input).println()
 }
@@ -42,16 +49,16 @@ private enum class Tile(var char: Char) {
     ;
 
     companion object {
-        fun from(c: Char) = Tile.entries.first { it.char == c }
+        fun from(c: Char) = entries.first { it.char == c }
     }
 }
 
 private fun Direction.toChar(): Char {
     return when (this) {
-        Direction.UP -> UP.char
-        Direction.DOWN -> DOWN.char
-        Direction.LEFT -> LEFT.char
-        Direction.RIGHT -> RIGHT.char
+        Direction.UP -> Tile.UP.char
+        Direction.DOWN -> Tile.DOWN.char
+        Direction.LEFT -> Tile.LEFT.char
+        Direction.RIGHT -> Tile.RIGHT.char
         else -> throw IllegalArgumentException("Unknown direction: $this")
     }
 }
@@ -86,7 +93,7 @@ private class Layer(private val keyboard: GenericGrid<Tile>, private val lowerLa
 
     private fun getMovesForInput(input: String): List<String> =
         movesCache.getOrPut(input) {
-            var position = getPosition(A)
+            var position = getPosition(Tile.A)
             var outputs = listOf("")
 
             input.forEach { c ->
@@ -122,7 +129,7 @@ private class Layer(private val keyboard: GenericGrid<Tile>, private val lowerLa
                     path.moves.size > shortestLengthSoFar() -> Unit
                     headPos == targetPos -> result.add(path)
                     head == null -> Unit
-                    head == EMPTY_SPACE -> Unit
+                    head == Tile.EMPTY_SPACE -> Unit
                     else ->
                         paths.addAll(
                             BASIC_DIRECTIONS.map {
@@ -144,18 +151,18 @@ private fun numericGrid(): GenericGrid<Tile> = GenericGrid(
     width = 3,
     height = 4,
     fields = buildList {
-        add(N7)
-        add(N8)
-        add(N9)
-        add(N4)
-        add(N5)
-        add(N6)
-        add(N1)
-        add(N2)
-        add(N3)
-        add(EMPTY_SPACE)
-        add(N0)
-        add(A)
+        add(Tile.N7)
+        add(Tile.N8)
+        add(Tile.N9)
+        add(Tile.N4)
+        add(Tile.N5)
+        add(Tile.N6)
+        add(Tile.N1)
+        add(Tile.N2)
+        add(Tile.N3)
+        add(Tile.EMPTY_SPACE)
+        add(Tile.N0)
+        add(Tile.A)
     },
 )
 
@@ -164,12 +171,12 @@ private fun arrowGrid(): GenericGrid<Tile> = GenericGrid(
     width = 3,
     height = 2,
     fields = buildList {
-            add(EMPTY_SPACE)
-            add(UP)
-            add(A)
-            add(LEFT)
-            add(DOWN)
-            add(RIGHT)
+            add(Tile.EMPTY_SPACE)
+            add(Tile.UP)
+            add(Tile.A)
+            add(Tile.LEFT)
+            add(Tile.DOWN)
+            add(Tile.RIGHT)
     }
 )
 

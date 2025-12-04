@@ -1,6 +1,13 @@
+package y2024
+
+import Point
+import coordSequence
+import println
+import readInputLines
+import kotlin.sequences.filter
 
 fun main() {
-    val input = readInputLines("day-20-input")
+    val input = readInputLines(2024, "day-20-input")
     firstPart(input).println()
     secondPart(input).println()
 }

@@ -1,5 +1,10 @@
+package y2024
+
+import println
+import readInput
+
 fun main() {
-    val stones = readInput("day-11-input").split(" ").toList()
+    val stones = readInput(2024,  "day-11-input").split(" ").toList()
     stones.println()
     firstPart(stones).println()
     secondPart(stones).println()

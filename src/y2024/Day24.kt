@@ -1,5 +1,11 @@
+package y2024
+
+import println
+import readInput
+import kotlin.invoke
+
 fun main() {
-    val input = readInput("day-24-input")
+    val input = readInput(2024,  "day-24-input")
     CrossedWires(input).firstPart().println()
     CrossedWires(input).secondPart().println()
 }

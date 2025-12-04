@@ -1,5 +1,14 @@
+package y2024
+
+import Direction
+import Grid
+import Point
+import println
+import readInputLines
+import kotlin.text.iterator
+
 fun main() {
-    val lines = readInputLines("day-04-input")
+    val lines = readInputLines(2024, "day-04-input")
     val grid = Grid(lines)
 
     partOne(grid).println()

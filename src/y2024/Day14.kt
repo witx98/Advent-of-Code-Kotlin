@@ -1,3 +1,9 @@
+package y2024
+
+import Point
+import println
+import readInputLines
+
 data class Robot(val position: Point, val velocity: Point, val constraints: Point) {
     fun steps(n: Int = 1): Robot {
         var newPosition = position
@@ -14,7 +20,7 @@ data class Robot(val position: Point, val velocity: Point, val constraints: Poin
 
 fun main() {
 
-    val robots: List<Robot> = readInputLines("day-14-input").map { line ->
+    val robots: List<Robot> = readInputLines(2024, "day-14-input").map { line ->
         val regex = Regex("""p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)""")
         regex.matchEntire(line)!!.destructured.let { (px, py, vx, vy) ->
             Robot(Point(px.toInt(), py.toInt()), Point(vx.toInt(), vy.toInt()), Point(101, 103))

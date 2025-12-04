@@ -1,7 +1,12 @@
+package y2024
+
+import println
+import readInput
+
 const val FREE = Int.MIN_VALUE
 
 fun main() {
-    val input: List<Int> = readInput("day-09-input").map { c -> c.toString().toInt() }.toList()
+    val input: List<Int> = readInput(2024,  "day-09-input").map { c -> c.toString().toInt() }.toList()
     firstTask(input).println()
     secondTask(input).println()
 

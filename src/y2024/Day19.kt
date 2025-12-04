@@ -1,5 +1,10 @@
+package y2024
+
+import println
+import readInput
+
 fun main() {
-    val (first, second) = readInput("day-19-input").split("\n\n")
+    val (first, second) = readInput(2024,  "day-19-input").split("\n\n")
     val towels = first.split(", ").toList()
     val patterns = second.lines()
     firstPart(towels, patterns).println()

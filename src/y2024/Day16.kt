@@ -1,9 +1,16 @@
+package y2024
+
+import Direction
 import Direction.Rotation.LEFT
 import Direction.Rotation.RIGHT
+import Grid
+import Point
+import println
+import readInputLines
 import java.util.*
 
 fun main() {
-    val input = readInputLines("day-16-input")
+    val input = readInputLines(2024, "day-16-input")
     val g = Grid(input)
     firstPart(g).println()
     secondPart(g).println()

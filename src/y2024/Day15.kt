@@ -1,3 +1,12 @@
+package y2024
+
+import Direction
+import Grid
+import Point
+import println
+import readInputLines
+import kotlin.collections.getValue
+
 typealias WideBox = Pair<Point, Point>
 data class WideWarehouse(val robot: Point, val boxes: Set<WideBox>, val walls: Set<Point>) {
     private val boxPositions: Map<Point, WideBox> = boxes.flatMap { listOf(it.first to it, it.second to it) }.toMap()
@@ -59,7 +68,7 @@ data class Warehouse(val robot: Point, val boxes: Set<Point>, val walls: Set<Poi
 }
 
 fun main() {
-    val input = readInputLines("day-15-input")
+    val input = readInputLines(2024, "day-15-input")
     val directions = input.takeLastWhile { it.isNotEmpty() }.joinToString("").map { toDirection(it) }
     val map = input.takeWhile { it.isNotEmpty() }.toList()
     val grid = Grid(map)

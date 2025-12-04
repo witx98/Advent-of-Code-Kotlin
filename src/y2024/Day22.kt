@@ -1,5 +1,10 @@
+package y2024
+
+import println
+import readInputLines
+
 fun main() {
-    val input = readInputLines("day-22-input")
+    val input = readInputLines(2024, "day-22-input")
 
     firstPart(input).println()
     secondPart(input).println()

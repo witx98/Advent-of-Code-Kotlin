@@ -1,3 +1,8 @@
+package y2024
+
+import Point
+import println
+import readInputLines
 import java.util.*
 
 private const val WIDTH = 71
@@ -6,7 +11,7 @@ private val START = Point(0, 0)
 private val END = Point(WIDTH - 1, HEIGHT - 1)
 
 fun main() {
-    val bytes = readInputLines("day-18-input").map { line ->
+    val bytes = readInputLines(2024, "day-18-input").map { line ->
         val (left, right) = line.split(",")
         Point(left.toInt(), right.toInt())
     }.toSet()

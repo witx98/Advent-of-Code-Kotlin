@@ -1,5 +1,10 @@
+package y2024
+
+import println
+import readInputLines
+
 fun main() {
-    val lines = readInputLines("day-23-input")
+    val lines = readInputLines(2024, "day-23-input")
     val connections = mutableMapOf<String, Set<String>>()
     lines.forEach { line ->
         val (first, second) = line.split("-")
