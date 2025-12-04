@@ -14,7 +14,7 @@ fun main() {
     secondResult.println()
 }
 
-fun secondPart(lines: List<String>): Int {
+private fun secondPart(lines: List<String>): Int {
     var current = 50
     var counter = 0
 
@@ -36,7 +36,7 @@ fun secondPart(lines: List<String>): Int {
     return counter
 }
 
-fun firstPart(lines: List<String>): Int {
+private fun firstPart(lines: List<String>): Int {
     var current = 50
     var counter = 0
     lines.forEach {
