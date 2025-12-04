@@ -2,6 +2,7 @@ package y2025
 
 import println
 import readInputLines
+import kotlin.math.absoluteValue
 
 
 fun main() {
@@ -13,8 +14,26 @@ fun main() {
     secondResult.println()
 }
 
-fun secondPart(lines: List<String>) {
+fun secondPart(lines: List<String>): Int {
+    var current = 50
+    var counter = 0
 
+    lines.forEach {
+        val rotation = parseLine(it)
+        val fullSpins = rotation.absoluteValue / 100
+        counter += fullSpins
+
+        val remainingRotation = rotation % 100
+        val rotatedPosition = current + remainingRotation
+        val finalPosition = rotatedPosition.mod(100)
+        if (current != 0) {
+            if (finalPosition != rotatedPosition || finalPosition == 0) {
+                counter++
+            }
+        }
+        current = finalPosition
+    }
+    return counter
 }
 
 fun firstPart(lines: List<String>): Int {
