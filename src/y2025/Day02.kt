@@ -19,30 +19,50 @@ fun main() {
     secondResult.println()
 }
 
-private fun secondPart(ranges: List<Range>): Int {
-    return 0
+private fun secondPart(ranges: List<Range>): Long {
+    return ranges.sumOf { range -> invalidIdsInRange(range, true).sum() }
 }
 
 private fun firstPart(ranges: List<Range>): Long {
-    return ranges.sumOf { range -> invalidIdsInRange(range).sum() }
+    return ranges.sumOf { range -> invalidIdsInRange(range, false).sum() }
 }
 
-private fun invalidIdsInRange(range: Range): List<Long> {
+private fun invalidIdsInRange(range: Range, partTwo: Boolean): List<Long> {
     val invalidIds = mutableListOf<Long>()
     for (id in range.elements) {
         val idAsString = id.toString()
-
-        if (idAsString.length % 2 != 0) {
-            continue
+        if (!partTwo && isDigitSequenceRepeatedTwice(idAsString)) {
+            invalidIds.add(id)
         }
 
-        val middle = idAsString.length / 2
-        val firstHalf = idAsString.take(middle)
-        val secondHalf = idAsString.substring(middle)
-
-        if (firstHalf == secondHalf) {
+        if (partTwo && isDigitSequenceRepeatedAtLeastTwice(idAsString)) {
             invalidIds.add(id)
         }
     }
     return invalidIds
+}
+
+fun isDigitSequenceRepeatedAtLeastTwice(idAsString: String): Boolean {
+    val maxAmountOfRepeats = idAsString.length / 2
+
+    for (chunkSize in 1..maxAmountOfRepeats) {
+        if (idAsString.length % chunkSize != 0) continue
+
+        val digitChunks = idAsString.chunked(chunkSize)
+        val repeated = digitChunks.all { chunk -> chunk == digitChunks[0] }
+        if (repeated) return true
+    }
+    return false
+}
+
+fun isDigitSequenceRepeatedTwice(idAsString: String): Boolean {
+    if (idAsString.length % 2 != 0) {
+        return false
+    }
+
+    val middle = idAsString.length / 2
+    val firstHalf = idAsString.take(middle)
+    val secondHalf = idAsString.substring(middle)
+
+    return firstHalf == secondHalf
 }
