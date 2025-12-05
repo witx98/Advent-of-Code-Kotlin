@@ -83,6 +83,8 @@ data class Range (val start: Long, val end: Long) {
     fun contains(value: Long) = value in start..end
 
     fun difference() = 1 + end - start
+
+    val elements = sequence { yieldAll(start..end) }
 }
 
 class Grid(lines: List<String>) {
