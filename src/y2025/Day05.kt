@@ -7,10 +7,8 @@ import readInputLines
 
 fun main() {
     val lines = readInputLines(2025, "day-05-input")
-    val idx = lines.indexOf("")
-    val (first, second) =
-        if (idx == -1) lines to emptyList()
-        else lines.take(idx) to lines.drop(idx + 1)
+    val breakPoint = lines.indexOf("")
+    val (first, second) = lines.take(breakPoint) to lines.drop(breakPoint + 1)
     val ranges: List<Range> = first.map { line ->
         val splitLine = line.split("-")
         Range(splitLine[0].toLong(), splitLine[1].toLong())
@@ -24,21 +22,19 @@ fun main() {
 }
 
 private fun secondPart(ranges: List<Range>): Long {
-    val mergedRanges = mergeRanges(ranges)
-    return mergedRanges.sumOf { range -> range.difference() }
+    return mergeRanges(ranges).sumOf { range -> range.difference() }
 }
 
 fun mergeRanges(ranges: List<Range>): List<Range> {
     val sortedRanges = ranges.sortedBy { it.start }
     val result = mutableListOf(sortedRanges.first())
 
-    for (currentRange in sortedRanges.drop(1)) {
-        val previous = result.last()
-
-        if (currentRange.start <= previous.end) {
-            result[result.lastIndex] = Range(previous.start, maxOf(previous.end, currentRange.end))
+    sortedRanges.drop(1).forEach { range ->
+        val previousRange = result.last()
+        if (range.start <= previousRange.end) {
+            result[result.lastIndex] = Range(previousRange.start, maxOf(previousRange.end, range.end))
         } else {
-            result.add(currentRange)
+            result.add(range)
         }
     }
     return result
