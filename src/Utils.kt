@@ -78,6 +78,12 @@ fun coordSequence(xRange: IntRange, yRange: IntRange) = yRange.asSequence().flat
 
 data class Vec2(val x: Long, val y: Long)
 
+data class Range (val start: Long, val end: Long) {
+
+    fun contains(value: Long) = value in start..end
+
+    fun difference() = 1 + end - start
+}
 
 class Grid(lines: List<String>) {
     private val grid: List<List<Char>> = lines.map { line -> line.toCharArray().toList() }
