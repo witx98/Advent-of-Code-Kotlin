@@ -50,7 +50,7 @@ private fun firstPart(lines: List<String>): Int {
     return counter
 }
 
-fun parseLine(line: String): Int {
+private fun parseLine(line: String): Int {
     val value = line.substring(1).toInt()
     return when (line[0]) {
         'L' -> -value

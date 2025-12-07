@@ -22,7 +22,7 @@ private fun getAreas(grid: Grid): List<List<Point>> {
     val visited = mutableSetOf<Point>()
 
     fun dfs(current: Point, garden: Char, area: MutableList<Point>) {
-        if (visited.contains(current) || !grid.isWithinBounds(current) || grid.getAt(current) != garden) {
+        if (visited.contains(current) || !grid.within(current) || grid.getAt(current) != garden) {
             return
         }
 

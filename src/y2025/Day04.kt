@@ -50,5 +50,5 @@ private fun gatherRemovedRolls(grid: Grid, removedRolls: MutableSet<Point>): Int
 }
 
 private fun checkNeighbour(grid: Grid, neighbour: Point, removedRolls: Set<Point>): Boolean {
-    return grid.isWithinBounds(neighbour) && grid.getAt(neighbour) == '@' && neighbour !in removedRolls
+    return grid.within(neighbour) && grid.getAt(neighbour) == '@' && neighbour !in removedRolls
 }

@@ -28,7 +28,7 @@ fun findAntiNodes(lookup: Map<Char, Set<Point>>, grid: Grid): Set<Point> {
                 for (second in lookup[type]!!) {
                     if (first != second) {
                         val antiNodePosition = first + (second - first) * 2
-                        if (grid.isWithinBounds(antiNodePosition)) {
+                        if (grid.within(antiNodePosition)) {
                             add(antiNodePosition)
                         }
                     }
@@ -46,7 +46,7 @@ fun findAntiNodes2(lookup: Map<Char, Set<Point>>, grid: Grid): Set<Point> {
                     if (first != second) {
                         var i = 0
                         var antiNodePosition = first + (second - first) * i
-                        while (grid.isWithinBounds(antiNodePosition)) {
+                        while (grid.within(antiNodePosition)) {
                             add(antiNodePosition)
                             i++
                             antiNodePosition = first + (second - first) * i

@@ -43,14 +43,14 @@ private fun walk(grid: Grid, start: Point, obstacle: Point? = null): Set<Point>?
 
     fun move(currentPoint: Point): Point {
         var nextPoint = currentPoint + direction
-        while (grid.isWithinBounds(nextPoint) && (grid.getAt(nextPoint) == '#' || nextPoint == obstacle)) {
+        while (grid.within(nextPoint) && (grid.getAt(nextPoint) == '#' || nextPoint == obstacle)) {
             direction = direction.rotate(Direction.Rotation.RIGHT)
             nextPoint = currentPoint + direction
         }
         return nextPoint
     }
 
-    while (grid.isWithinBounds(current)) {
+    while (grid.within(current)) {
         if (!visited.add(current to direction)) {
             return null
         }

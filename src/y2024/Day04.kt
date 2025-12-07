@@ -27,7 +27,7 @@ private fun checkDirection(grid: Grid, point: Point, direction: Direction): Bool
     var current = point
 
     for (letter in "XMAS") {
-        if (!grid.isWithinBounds(current) || grid.getAt(current) != letter) {
+        if (!grid.within(current) || grid.getAt(current) != letter) {
             return false
         }
         current += direction
@@ -37,7 +37,7 @@ private fun checkDirection(grid: Grid, point: Point, direction: Direction): Bool
 
 
 private fun partTwo(grid: Grid): Int {
-    return grid.indices.filter { point -> grid.isWithinBounds(point, 1u) }
+    return grid.indices.filter { point -> grid.within(point, 1u) }
         .filter { p -> grid.getAt(p) == 'A' }
         .count { point -> checkDiagonals(grid, point) }
 }

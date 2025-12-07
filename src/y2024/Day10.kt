@@ -27,7 +27,7 @@ private fun solveFirstMaze(startingPoint: Point, grid: Grid): Set<Point> {
     val peaks = mutableSetOf<Point>()
 
      fun dfs(previous: Point, current: Point) {
-        if  (!grid.isWithinBounds(current) || grid.getAt(current) == '.' || (current != previous && grid.getAsInt(current) - grid.getAsInt(previous) != 1) || visited.contains(current)) {
+        if  (!grid.within(current) || grid.getAt(current) == '.' || (current != previous && grid.getAsInt(current) - grid.getAsInt(previous) != 1) || visited.contains(current)) {
             return
         }
 
@@ -59,7 +59,7 @@ private fun solveSecondMaze(startingPoint: Point, grid: Grid): Set<List<Point>> 
     val paths = mutableSetOf<List<Point>>()
 
     fun dfs(previous: Point, current: Point, currentPath: MutableList<Point>) {
-        if  (!grid.isWithinBounds(current) || grid.getAt(current) == '.' || (current != previous && grid.getAsInt(current) - grid.getAsInt(previous) != 1) || visited.contains(current)) {
+        if  (!grid.within(current) || grid.getAt(current) == '.' || (current != previous && grid.getAsInt(current) - grid.getAsInt(previous) != 1) || visited.contains(current)) {
             return
         }
 

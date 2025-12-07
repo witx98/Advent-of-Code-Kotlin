@@ -110,11 +110,15 @@ class Grid(lines: List<String>) {
 
     fun getAt(p: Point): Char = grid[p.y][p.x]
 
+    fun get(at: Point) = if (outside(at)) null else getAt(at)
+
     fun getAsInt(p: Point): Int = getAt(p).toString().toInt()
 
-    fun isWithinBounds(point: Point, margin: UInt = 0u): Boolean =
+    fun within(point: Point, margin: UInt = 0u): Boolean =
         point.y in (0 + margin.toInt()) until (rows - margin.toInt())
                 && point.x in (0 + margin.toInt()) until (columns - margin.toInt())
+
+    fun outside(point: Point) = !within(point)
 
 }
 
