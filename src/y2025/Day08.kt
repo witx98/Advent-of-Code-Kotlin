@@ -18,9 +18,34 @@ fun main() {
     secondResult.println()
 }
 
-private fun secondPart(positions: List<Position>): Int {
+private fun secondPart(positions: List<Position>): Long {
+    val connectionsSortedByDistance = connectionsSortedByDistance(positions)
+    val (pos1, pos2) = findLastCircuit(positions, connectionsSortedByDistance)
+    return pos1.x * pos2.x
+}
 
-    return 0
+private fun findLastCircuit(
+    positions: List<Position>,
+    connectionsSortedByDistance: List<Connection>
+): Pair<Position, Position> {
+    val circuits = positions.map { setOf(it) }.toMutableSet()
+
+    for ((pos1, pos2) in connectionsSortedByDistance) {
+        val circuit1: Set<Position> = circuits.first { pos1 in it }
+        val circuit2: Set<Position> = circuits.first { pos2 in it }
+        if (circuit1 == circuit2) {
+            continue
+        }
+
+        circuits.remove(circuit1)
+        circuits.remove(circuit2)
+        val merge = circuit1 + circuit2
+        circuits.add(merge)
+        if (circuits.size == 1) {
+            return pos1 to pos2
+        }
+    }
+    throw IllegalStateException("No last circuit found")
 }
 
 private fun firstPart(positions: List<Position>): Int {
