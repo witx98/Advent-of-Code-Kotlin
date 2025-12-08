@@ -73,7 +73,7 @@ data class Point(val x: Int, val y: Int) {
     }
 }
 
-data class Position(val x: Int, val y: Int, val z: Int) {
+data class Position(val x: Long, val y: Long, val z: Long) {
 
     fun distance(other: Position): Double = sqrt(
         ((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) + (z - other.z) * (z - other.z)).toDouble())

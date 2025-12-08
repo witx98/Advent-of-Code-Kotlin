@@ -9,7 +9,7 @@ fun main() {
     val positions = readInputLines(2025, "day-08-input")
         .map {
             val (x, y, z) = it.split(",")
-            Position(x.toInt(), y.toInt(), z.toInt())
+            Position(x.toLong(), y.toLong(), z.toLong())
         }
     val firstResult = firstPart(positions)
     val secondResult = secondPart(positions)
@@ -41,12 +41,13 @@ private fun findCircuits(
 ): MutableSet<Set<Position>> {
     val circuits = positions.map { setOf(it) }.toMutableSet()
 
-    for ((pos1, pos2) in connectionsSortedByDistance.take(10)) {
+    for ((pos1, pos2) in connectionsSortedByDistance.take(1000)) {
         val circuit1: Set<Position> = circuits.first { pos1 in it }
         val circuit2: Set<Position> = circuits.first { pos2 in it }
         if (circuit1 == circuit2) {
             continue
         }
+
         circuits.remove(circuit1)
         circuits.remove(circuit2)
         val merge = circuit1 + circuit2
