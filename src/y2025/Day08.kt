@@ -29,23 +29,30 @@ private fun findLastCircuit(
     connectionsSortedByDistance: List<Connection>
 ): Pair<Position, Position> {
     val circuits = positions.map { setOf(it) }.toMutableSet()
-
     for ((pos1, pos2) in connectionsSortedByDistance) {
-        val circuit1: Set<Position> = circuits.first { pos1 in it }
-        val circuit2: Set<Position> = circuits.first { pos2 in it }
-        if (circuit1 == circuit2) {
-            continue
-        }
-
-        circuits.remove(circuit1)
-        circuits.remove(circuit2)
-        val merge = circuit1 + circuit2
-        circuits.add(merge)
+        updateCircuits(circuits, pos1, pos2)
         if (circuits.size == 1) {
             return pos1 to pos2
         }
     }
     throw IllegalStateException("No last circuit found")
+}
+
+private fun updateCircuits(
+    circuits: MutableSet<Set<Position>>,
+    pos1: Position,
+    pos2: Position
+) {
+    val circuit1: Set<Position> = circuits.first { pos1 in it }
+    val circuit2: Set<Position> = circuits.first { pos2 in it }
+    if (circuit1 == circuit2) {
+        return
+    }
+
+    circuits.remove(circuit1)
+    circuits.remove(circuit2)
+    val merge = circuit1 + circuit2
+    circuits.add(merge)
 }
 
 private fun firstPart(positions: List<Position>): Int {
@@ -67,16 +74,7 @@ private fun findCircuits(
     val circuits = positions.map { setOf(it) }.toMutableSet()
 
     for ((pos1, pos2) in connectionsSortedByDistance.take(1000)) {
-        val circuit1: Set<Position> = circuits.first { pos1 in it }
-        val circuit2: Set<Position> = circuits.first { pos2 in it }
-        if (circuit1 == circuit2) {
-            continue
-        }
-
-        circuits.remove(circuit1)
-        circuits.remove(circuit2)
-        val merge = circuit1 + circuit2
-        circuits.add(merge)
+        updateCircuits(circuits, pos1, pos2)
     }
     return circuits
 }
