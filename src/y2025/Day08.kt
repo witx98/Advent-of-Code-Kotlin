@@ -52,7 +52,6 @@ private fun findCircuits(
     connectionsSortedByDistance: List<Connection>
 ): MutableSet<Set<Position>> {
     val circuits = positions.map { setOf(it) }.toMutableSet()
-
     for ((pos1, pos2) in connectionsSortedByDistance.take(1000)) {
         circuits.update(pos1, pos2)
     }
