@@ -8,8 +8,8 @@ import readInputLines
 fun main() {
     val positions = readInputLines(2025, "day-08-input")
         .map {
-            val (x,y,z) = it.split(",")
-            Position(x.toInt(),y.toInt(),z.toInt())
+            val (x, y, z) = it.split(",")
+            Position(x.toInt(), y.toInt(), z.toInt())
         }
     val firstResult = firstPart(positions)
     val secondResult = secondPart(positions)
@@ -37,31 +37,38 @@ private fun firstPart(positions: List<Position>): Int {
 
 private fun findCircuits(
     positions: List<Position>,
-    connectionsSortedByDistance: List<Pair<Position, Position>>
+    connectionsSortedByDistance: List<Connection>
 ): MutableSet<Set<Position>> {
     val circuits = positions.map { setOf(it) }.toMutableSet()
 
-    var iterations = 0
-    for ((pos1, pos2) in connectionsSortedByDistance) {
-        val circuit1 = circuits.first { pos1 in it }
-        val circuit2 = circuits.first { pos2 in it }
-        if (circuit1 == circuit2) continue
+    for ((pos1, pos2) in connectionsSortedByDistance.take(10)) {
+        val circuit1: Set<Position> = circuits.first { pos1 in it }
+        val circuit2: Set<Position> = circuits.first { pos2 in it }
+        if (circuit1 == circuit2) {
+            continue
+        }
         circuits.remove(circuit1)
         circuits.remove(circuit2)
-        circuits.add(circuit1 + circuit2)
-        iterations++
-        if (iterations == 9) break
+        val merge = circuit1 + circuit2
+        circuits.add(merge)
     }
     return circuits
 }
 
-private fun connectionsSortedByDistance(positions: List<Position>): List<Pair<Position, Position>> {
-    val distances =  mutableListOf<Pair<Position, Position>>()
+
+private data class Connection(val pos1: Position, val pos2: Position) {
+    val distance = pos1.distance(pos2)
+}
+
+private fun connectionsSortedByDistance(positions: List<Position>): List<Connection> {
+    val distances = mutableListOf<Pair<Position, Position>>()
     for (i in 0 until positions.size - 1) {
         for (j in i + 1 until positions.size) {
             distances += positions[i] to positions[j]
         }
     }
-    return distances.sortedBy { (pos1, pos2) -> pos1.distance(pos2) }
+    return distances
+        .map { Connection(it.first, it.second) }
+        .sortedBy { it.distance }
 }
 
