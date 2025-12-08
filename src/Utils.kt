@@ -3,6 +3,7 @@ import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 /**
  * Reads lines from the given input txt file.
@@ -72,13 +73,20 @@ data class Point(val x: Int, val y: Int) {
     }
 }
 
+data class Position(val x: Int, val y: Int, val z: Int) {
+
+    fun distance(other: Position): Double = sqrt(
+        ((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) + (z - other.z) * (z - other.z)).toDouble())
+}
+
 fun coordSequence(width: Int, height: Int) = coordSequence(0 until width, 0 until height)
 
-fun coordSequence(xRange: IntRange, yRange: IntRange) = yRange.asSequence().flatMap { y -> xRange.asSequence().map { x -> Point(x, y) } }
+fun coordSequence(xRange: IntRange, yRange: IntRange) =
+    yRange.asSequence().flatMap { y -> xRange.asSequence().map { x -> Point(x, y) } }
 
 data class Vec2(val x: Long, val y: Long)
 
-data class Range (val start: Long, val end: Long) {
+data class Range(val start: Long, val end: Long) {
 
     fun contains(value: Long) = value in start..end
 
