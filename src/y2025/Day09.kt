@@ -17,164 +17,104 @@ fun main() {
 }
 
 private fun secondPart(points: List<Point>): Long {
-    val rectangles = mutableSetOf<Rectangle>()
-    for (i in 0 until points.size - 1) {
-        for (j in i + 1 until points.size) {
-            val a = points[i]
-            val b = points[j]
-            val rectangle = Rectangle(a, b)
-            rectangles.add(rectangle)
-        }
-    }
+    val rectangles = rectangles(points)
 
-    val pollygonWalls = points.zipWithNext().map { it -> Wall(it.first, it.second) }.toMutableList()
-    pollygonWalls.add(Wall(points.last(), points.first()))
-    val polygon = Polygon(pollygonWalls)
+    val polygonWalls = points.zipWithNext().map { Wall(it.first, it.second) }.toMutableList()
+    polygonWalls.add(Wall(points.last(), points.first()))
+    val polygon = Polygon(polygonWalls)
     val sortedRectangles = rectangles.sortedByDescending { rectangle -> rectangle.area }
 
-    val filteredRectangles = sortedRectangles.filter { it -> !polygon.anyWallsIntersects(it) }
+    val biggestRectangle = sortedRectangles
+        .filter { rectangle -> !polygon.anyWallsIntersects(rectangle) }
+        .filter { rectangle -> polygon.isRectangleWithin(rectangle) }
+        .maxBy { rectangle -> rectangle.area }
 
-    val valid = filteredRectangles.filter { rectangle -> polygon.isRectangleWithin(rectangle) }
-
-    println("Here")
-    println(valid)
-    return valid.maxBy { rectangle -> rectangle.area }.area
+    return biggestRectangle.area
 }
 
-private fun firstPart(points: List<Point>): Long {
+private fun rectangles(points: List<Point>): Set<Rectangle> {
     val rectangles = mutableSetOf<Rectangle>()
     for (i in 0 until points.size - 1) {
         for (j in i + 1 until points.size) {
             rectangles.add(Rectangle(points[i], points[j]))
         }
     }
+    return rectangles
+}
 
-    return rectangles.maxBy { rectangle -> rectangle.area }.area
+private fun firstPart(points: List<Point>): Long {
+    return rectangles(points).maxBy { rectangle -> rectangle.area }.area
 }
 
 private data class Rectangle(val a: Point, val b: Point) {
     val area: Long = (1 + abs(a.x - b.x)).toLong() * (1 + abs(a.y - b.y)).toLong()
+    val c = Point(a.x, b.y)
+    val d = Point(b.x, a.y)
     val walls: Set<Wall> = buildSet {
-        val c = Point(a.x, b.y)
-        val d = Point(b.x, a.y)
         add(Wall(a, c))
         add(Wall(a, d))
         add(Wall(b, c))
         add(Wall(b, d))
     }
-
-    fun top(): Wall {
-        val filtered = walls.filter { wall -> !wall.isVertical() }
-        return if (filtered.isEmpty()) {
-            walls.maxBy { it.a.y }
-        } else {
-            filtered.maxBy { it.a.y }
-        }
-    }
-
-    fun bottom(): Wall {
-        val filtered = walls.filter { wall -> !wall.isVertical() }
-        return if (filtered.isEmpty()) {
-            walls.minBy { it.a.y }
-        } else {
-            filtered.minBy { it.a.y }
-        }
-    }
-
-    fun right(): Wall {
-        val filtered = walls.filter { wall -> wall.isVertical() }
-        return if (filtered.isEmpty()) {
-            walls.maxBy { it.a.x }
-        } else {
-            filtered.maxBy { it.a.x }
-        }
-    }
-
-    fun left(): Wall {
-        val filtered =  walls.filter { wall -> wall.isVertical() }
-        return if (filtered.isEmpty()) {
-            walls.minBy { it.a.x }
-        } else {
-            filtered.minBy { it.a.x }
-        }
-    }
 }
 
 private data class Polygon(val walls: List<Wall>) {
-
-    val topMostWall: Wall = walls.filter { wall -> !wall.isVertical() }.maxBy { it.a.y }
-    val bottomMostWall: Wall = walls.filter { wall -> !wall.isVertical() }.minBy { it.a.y }
-    val rightMostWall: Wall = walls.filter { wall -> wall.isVertical() }.maxBy { it.a.x }
-    val leftMostWall: Wall = walls.filter { wall -> wall.isVertical() }.minBy { it.a.x }
-
     fun anyWallsIntersects(rectangle: Rectangle): Boolean {
-        return rectangle.walls.any { this.walls.any { polygonWall -> polygonWall.intersects(it) } }
+        return rectangle.walls.any { rectWall -> this.walls.any { polygonWall -> polygonWall.intersects(rectWall) } }
     }
 
     fun isRectangleWithin(rectangle: Rectangle): Boolean {
-        val startTop = rectangle.top().a
-        val startBottom = rectangle.bottom().a
-        val startLeft = rectangle.left().a
-        val startRight = rectangle.right().a
+        return containsPoint(rectangle.a) &&
+                containsPoint(rectangle.b) &&
+                containsPoint(rectangle.c) &&
+                containsPoint(rectangle.d)
+    }
 
+    fun containsPoint(p: Point): Boolean {
+        var crosses = 0
+        for (wall in walls) {
+            if (wall.isInWall(p)) {
+                return true
+            }
 
-        val biggestY = topMostWall.a.y + 1
-        val smallestY = bottomMostWall.a.y - 1
-
-        val biggestX = rightMostWall.a.x + 1
-        val smallestX = leftMostWall.a.x - 1
-
-
-        val topRay = Wall(startTop.plus(Direction.UP), Point(startTop.x, biggestY))
-        val bottomRay = Wall(startBottom.plus(Direction.DOWN), Point(startBottom.x, smallestY))
-        val rightRay = Wall(startRight.plus(Direction.LEFT), Point(biggestX, startRight.y))
-        val leftRay = Wall(startLeft.plus(Direction.RIGHT), Point(smallestX, startLeft.y))
-
-        if (rectangle.a == Point(2,3) || rectangle.b == Point(2,3) && rectangle.a == Point(9,5) || rectangle.b == Point(9,5)) {
-            println(rectangle)
+            if (!wall.isVertical()) {
+                continue
+            }
+            val verticalX = wall.a.x
+            if (p.y in wall.minY..<wall.maxY && verticalX > p.x) {
+                crosses++
+            }
         }
 
-        val isInTop = walls.any { wall -> topRay.touch(wall) }
-        val isInBottom = walls.any { wall -> bottomRay.touch(wall) }
-        val isInRight = walls.any { wall -> rightRay.touch(wall) }
-        val inInLeft = walls.any { wall -> leftRay.touch(wall) }
-
-
-        return isInTop && isInRight && isInBottom && inInLeft
+        if (crosses % 2 == 0) {
+            return false
+        } else {
+            return true
+        }
     }
 }
 
 private data class Wall(val a: Point, val b: Point) {
+    val minY = minOf(a.y, b.y)
+    val maxY = maxOf(a.y, b.y)
+
+    val minX = minOf(a.x, b.x)
+    val maxX = maxOf(a.x, b.x)
+
+    fun isInWall(p: Point): Boolean {
+        return p.x in minX..maxX && p.y in minY..maxY
+    }
 
     fun isVertical(): Boolean {
         return a.x == b.x
     }
 
-    fun touch(other: Wall): Boolean {
-        val thisVertical = this.isVertical()
-        val otherVertical = other.isVertical()
-        if (thisVertical && otherVertical) return false
-
-        val vertical = if (thisVertical) this else other
-        val horizontal = if (thisVertical) other else this
-
-        val vx = vertical.a.x
-        val hy = horizontal.a.y
-
-        val vMinY = minOf(vertical.a.y, vertical.b.y)
-        val vMaxY = maxOf(vertical.a.y, vertical.b.y)
-
-        val hMinX = minOf(horizontal.a.x, horizontal.b.x)
-        val hMaxX = maxOf(horizontal.a.x, horizontal.b.x)
-
-        val intersects = vx in hMinX..hMaxX && hy in vMinY..vMaxY
-        return intersects
-    }
-
     fun intersects(other: Wall): Boolean {
         val thisVertical = this.isVertical()
         val otherVertical = other.isVertical()
-        if (thisVertical && otherVertical) return false
+        if (thisVertical == otherVertical) {
+            return false
+        }
 
         val vertical = if (thisVertical) this else other
         val horizontal = if (thisVertical) other else this
@@ -182,13 +122,12 @@ private data class Wall(val a: Point, val b: Point) {
         val vx = vertical.a.x
         val hy = horizontal.a.y
 
-        val vMinY = minOf(vertical.a.y, vertical.b.y)
-        val vMaxY = maxOf(vertical.a.y, vertical.b.y)
+        val vMinY = vertical.minY
+        val vMaxY = vertical.maxY
 
-        val hMinX = minOf(horizontal.a.x, horizontal.b.x)
-        val hMaxX = maxOf(horizontal.a.x, horizontal.b.x)
+        val hMinX = vertical.minX
+        val hMaxX = vertical.maxX
 
-        val intersects = vx in (hMinX + 1)..(hMaxX - 1) && hy in (vMinY + 1)..(vMaxY - 1)
-        return intersects
+        return (vx in (hMinX + 1)..<hMaxX) && (hy in (vMinY + 1)..<vMaxY)
     }
 }
