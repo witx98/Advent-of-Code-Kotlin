@@ -9,14 +9,14 @@ import kotlin.math.abs
 fun main() {
     val points =
         readInputLines(2025, "day-09-input").map { line -> line.split(",").let { Point(it[0].toInt(), it[1].toInt()) } }
-//    val firstResult = firstPart(points)
+    val firstResult = firstPart(points)
     val secondResult = secondPart(points)
 
-//    firstResult.println()
+    firstResult.println()
     secondResult.println()
 }
 
-private fun secondPart(points: List<Point>): Int {
+private fun secondPart(points: List<Point>): Long {
     val rectangles = mutableSetOf<Rectangle>()
     for (i in 0 until points.size - 1) {
         for (j in i + 1 until points.size) {
@@ -38,8 +38,7 @@ private fun secondPart(points: List<Point>): Int {
 
     println("Here")
     println(valid)
-    valid.maxBy { rectangle -> rectangle.area }.println()
-    return 0
+    return valid.maxBy { rectangle -> rectangle.area }.area
 }
 
 private fun firstPart(points: List<Point>): Long {
