@@ -125,8 +125,8 @@ private data class Wall(val a: Point, val b: Point) {
         val vMinY = vertical.minY
         val vMaxY = vertical.maxY
 
-        val hMinX = vertical.minX
-        val hMaxX = vertical.maxX
+        val hMinX = horizontal.minX
+        val hMaxX = horizontal.maxX
 
         return (vx in (hMinX + 1)..<hMaxX) && (hy in (vMinY + 1)..<vMaxY)
     }
