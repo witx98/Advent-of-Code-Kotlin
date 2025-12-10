@@ -17,19 +17,21 @@ fun main() {
 }
 
 private fun secondPart(points: List<Point>): Long {
-    val rectangles = rectangles(points)
-
-    val polygonWalls = points.zipWithNext().map { Wall(it.first, it.second) }.toMutableList()
-    polygonWalls.add(Wall(points.last(), points.first()))
-    val polygon = Polygon(polygonWalls)
-    val sortedRectangles = rectangles.sortedByDescending { rectangle -> rectangle.area }
-
-    val biggestRectangle = sortedRectangles
+    val polygon = polygon(points)
+    val biggestRectangle = rectangles(points)
+        .sortedByDescending { rectangle -> rectangle.area }
         .filter { rectangle -> !polygon.anyWallsIntersects(rectangle) }
         .filter { rectangle -> polygon.isRectangleWithin(rectangle) }
         .maxBy { rectangle -> rectangle.area }
 
     return biggestRectangle.area
+}
+
+private fun polygon(points: List<Point>): Polygon {
+    val polygonWalls = points.zipWithNext().map { Wall(it.first, it.second) }.toMutableList()
+    polygonWalls.add(Wall(points.last(), points.first()))
+    val polygon = Polygon(polygonWalls)
+    return polygon
 }
 
 private fun rectangles(points: List<Point>): Set<Rectangle> {
